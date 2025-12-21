@@ -37,6 +37,14 @@ const authSchema = new Schema(
       type: Boolean,
       default: false,
     },
+    resetPasswordCode: {
+   type: String,
+   
+ },
+
+resetPasswordExpire: {
+  type: Date,
+},
 
     passwordChangedAt: Date,
   },
@@ -76,16 +84,6 @@ authSchema.statics.isPasswordMatched = async function (
   return await bcrypt.compare(plainPassword, hashedPassword);
 };
 
-authSchema.statics.isJWTIssuedBeforePasswordChanged = function (
-  passwordChangedAt,
-  jwtIssuedTimestamp
-) {
-  if (!passwordChangedAt) return false;
 
-  const changedTime =
-    new Date(passwordChangedAt).getTime() / 1000;
-
-  return changedTime > jwtIssuedTimestamp;
-};
 
 export const authModel = model("auth", authSchema);
