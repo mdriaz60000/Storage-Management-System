@@ -32,6 +32,14 @@ const authSchema = new Schema(
       enum: ["admin", "user"],
       default: "user",
     },
+     storageUsed: {
+    type: Number,
+    default: 0, 
+  },
+   totalStorage: {
+    type: Number,
+    default: 15.00,
+  },
 
     needsPasswordChange: {
       type: Boolean,
@@ -52,21 +60,21 @@ resetPasswordExpire: {
 );
 
 authSchema.pre("save", async function (next) {
-  // 1️⃣ password & confirmPassword match check
+  // 1 password & confirmPassword match check
   if (this.password !== this.confirmPassword) {
     return next(new Error("Password and Confirm Password do not match"));
   }
 
-  // 2️⃣ hash only if password modified
+  // 2 hash only if password modified
   if (!this.isModified("password")) return next();
 
-  // 3️⃣ hash password
+  // 3 hash password
   this.password = await bcrypt.hash(
     this.password,
     Number(config.bcrypt_salt_rounds)
   );
 
-  // 4️⃣ remove confirmPassword before save
+  // 4 remove confirmPassword before save
   this.confirmPassword = undefined;
 
   next();
