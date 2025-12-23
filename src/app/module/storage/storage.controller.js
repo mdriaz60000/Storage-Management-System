@@ -1,15 +1,14 @@
-import { storageService } from "./storage.service.js";
+import { allDataService } from "./storage.service.js";
 
-
-const createStorage = async (req, res, next) => {
+const getAllData = async (req, res, next) => {
   try {
-console.log(req.file)
+    const userId = req.user.userId;
+    console.log(userId)
+    const result = await allDataService.getAllData(userId);
 
-    const result = await storageService.createStorage(req.body);
-
-    res.status(201).json({
+    res.status(200).json({
       success: true,
-      message: "storage create successfully",
+      message: "All data fetched successfully",
       data: result,
     });
   } catch (err) {
@@ -17,6 +16,6 @@ console.log(req.file)
   }
 };
 
-export const storageController = {
-    createStorage
-}
+export const allDataController = {
+  getAllData
+};

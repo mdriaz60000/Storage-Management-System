@@ -1,11 +1,13 @@
 
 import express from "express";
-import { storageController } from "./storage.controller.js";
+
+import { auth } from '../../middleware/auth.js';
+import { allDataController } from "./storage.controller.js";
 
 
 const router = express.Router();
 
- router.post("/create-storage", storageController.createStorage  );
+router.get("/all-storage", auth(), allDataController.getAllData);
 
 
 

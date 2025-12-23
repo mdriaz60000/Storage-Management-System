@@ -24,6 +24,7 @@ app.use("/api/v1", noteRoutes )
 app.use("/api/v1", fileRoutes )
 app.use("/api/v1", folderRoutes )
 
+
 app.get("/", (req, res) => {
   res.send("Hello World! ");
 });

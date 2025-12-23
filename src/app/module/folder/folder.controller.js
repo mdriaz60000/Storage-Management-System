@@ -1,14 +1,15 @@
-
-
 import { folderService } from "./folder.service.js";
 
 const createFolder = async (req, res, next) => {
   try {
 
-    const payload = req.body;
-    // const userId = req.user.userId;
-    // console.log(userId)
-    const result = await folderService.createFolder(payload);
+ 
+     const userId = req.user.userId;
+     console.log(userId)
+    const result = await folderService.createFolder({
+        ...req.body,
+     user: userId,
+    });
 
     res.status(201).json({
       success: true,
@@ -21,8 +22,8 @@ const createFolder = async (req, res, next) => {
 };
 const getAllFolder = async (req, res, next) => {
   try {
-
-    const result = await folderService.getAllFolder();
+ const userId = req.user.userId;
+    const result = await folderService.getAllFolder(userId);
 
     res.status(200).json({
       success: true,
@@ -38,8 +39,8 @@ const getAllFolder = async (req, res, next) => {
 const deleteFolder = async (req, res, next) => {
   try {
    const {id} = req.params
-   const userId = req.user.userId;
-    const result = await folderService.deleteFolder(id, userId);
+  
+    const result = await folderService.deleteFolder(id);
     res.status(200).json({
       success: true,
       message: "folder delete successfully",

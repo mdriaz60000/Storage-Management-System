@@ -4,7 +4,11 @@ const createNote = async (req, res, next) => {
   try {
     const userId = req.user.userId;
     console.log(userId)
-    const result = await noteService.createNote({ ...req.body, user:userId});
+    
+    const result = await noteService.createNote({
+       ...req.body, 
+       user:userId
+      });
     res.status(201).json({
       success: true,
       message: "note create successfully",
@@ -16,7 +20,8 @@ const createNote = async (req, res, next) => {
 };
 const getAllNote = async (req, res, next) => {
   try {
-    const result = await noteService.getAllNote();
+    const userId = req.user.userId;
+    const result = await noteService.getAllNote(userId);
     res.status(200).json({
       success: true,
       message: "get all note successfully",
@@ -28,6 +33,19 @@ const getAllNote = async (req, res, next) => {
   }
 };
 
+const favoriteNote = async (req, res, next) => {
+  try {
+   const {id} = req.params
+    const result = await noteService.favoriteNote(id);
+    res.status(200).json({
+      success: true,
+      message: "note favorite successfully",
+      data : result
+    });
+  } catch (err) {
+    next(err);
+  }
+};
 const deleteNote = async (req, res, next) => {
   try {
    const {id} = req.params
@@ -45,5 +63,6 @@ const deleteNote = async (req, res, next) => {
 export const noteController = {
   createNote,
   getAllNote,
+  favoriteNote,
   deleteNote
 }

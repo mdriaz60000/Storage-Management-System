@@ -1,12 +1,11 @@
-
 import { Schema, model } from "mongoose";
 
 const folderSchema = new Schema(
   {
-    userId: {
+    user: {
          type: Schema.Types.ObjectId,
           ref: "auth",
-        //    required: true
+            required: true
          },
     name: {
          type: String,

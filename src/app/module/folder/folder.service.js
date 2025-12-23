@@ -3,11 +3,15 @@ import { folderModel } from "./folder.model.js";
 const createFolder = async (payload) => {
 
   const result = await folderModel.create(payload);
+  
   return result ;
 };
-const getAllFolder = async () => {
+const getAllFolder = async (userId) => {
 
-  const result = await folderModel.find();
+  const result = await folderModel.find({
+      user: userId,
+    isDeleted:false
+  });
   return result ;
 };
 

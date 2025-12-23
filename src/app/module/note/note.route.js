@@ -7,7 +7,8 @@ const router = express.Router();
 
  router.post("/create-note", auth(),  noteController.createNote  );
  router.get("/get-all-note", auth(), noteController.getAllNote  );
- router.put("/delete-note/:id", auth, noteController.deleteNote  );
+ router.put("/favorite-note/:id", auth(), noteController.favoriteNote  );
+ router.put("/delete-note/:id", auth(), noteController.deleteNote  );
 
 
 
