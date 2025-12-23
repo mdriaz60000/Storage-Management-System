@@ -13,35 +13,38 @@ const register = async (payload) => {
 
 const login = async (payload) => {
   const user = await authModel
-    .findOne({ email: payload?.email })
+    .findOne({
+      email: payload?.email,
+      isDelete: false, 
+    })
     .select("+password");
 
   if (!user) {
-    throw new Error("this is user error");
+    throw new Error("User not found or account is deleted");
   }
+
   const isPasswordMatch = await bcrypt.compare(
     payload?.password,
-    user?.password
+    user.password
   );
 
   if (!isPasswordMatch) {
-    throw new Error("password is wrong");
+    throw new Error("Password is wrong");
   }
 
   const accessToken = jwt.sign(
-    { email: user?.email, role: user?.role },
+    { email: user.email, userId: user._id, role: user.role },
     config.jwt_access_secret,
     { expiresIn: "2d" }
   );
 
   const reFreshToken = jwt.sign(
-    { email: user?.email, role: user?.role },
+    { email: user.email, userId: user._id, role: user.role },
     config.jwt_refresh_secret,
     { expiresIn: "30d" }
   );
 
-  const accessUser = { name: user?.name, email: user?.email, role: user?.role };
-  return { accessUser, accessToken, reFreshToken };
+  return { accessToken, reFreshToken };
 };
 
 const forgetPassword = async (payload) => {
@@ -85,7 +88,7 @@ const verifyResetCode = async ({ email, resetPasswordCode }) => {
   }
 
   const resetToken = jwt.sign({ userId: user._id }, config.jwt_refresh_secret, {
-    expiresIn: "50m",
+    expiresIn: "10m",
   });
 
   return { resetToken };
@@ -113,10 +116,21 @@ const resetPassword = async ({ password, confirmPassword, token }) => {
   return true;
 };
 
+const deleteAccount = async (id) => {
+    
+  const result = await authModel.updateOne({
+    _id: id, 
+     isDelete: true
+ });
+  return result ;
+};
+
+
 export const authService = {
   register,
   login,
   forgetPassword,
   verifyResetCode,
   resetPassword,
+  deleteAccount
 };

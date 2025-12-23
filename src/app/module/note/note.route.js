@@ -1,13 +1,13 @@
 
 import express from "express";
 import { noteController } from "./note.controller.js";
-
+import {auth} from "../../middleware/auth.js"
 
 const router = express.Router();
 
- router.post("/create-note", noteController.createNote  );
- router.get("/get-all-note", noteController.getAllNote  );
- router.put("/delete-note/:id", noteController.deleteNote  );
+ router.post("/create-note", auth(),  noteController.createNote  );
+ router.get("/get-all-note", auth(), noteController.getAllNote  );
+ router.put("/delete-note/:id", auth, noteController.deleteNote  );
 
 
 

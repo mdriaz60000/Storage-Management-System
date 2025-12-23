@@ -1,9 +1,10 @@
 import { noteService } from "./note.service.js";
 
-
 const createNote = async (req, res, next) => {
   try {
-    const result = await noteService.createNote(req.body);
+    const userId = req.user.userId;
+    console.log(userId)
+    const result = await noteService.createNote({ ...req.body, user:userId});
     res.status(201).json({
       success: true,
       message: "note create successfully",

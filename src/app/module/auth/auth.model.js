@@ -32,30 +32,34 @@ const authSchema = new Schema(
       enum: ["admin", "user"],
       default: "user",
     },
-     storageUsed: {
-    type: Number,
-    default: 0, 
-  },
-   totalStorage: {
-    type: Number,
-    default: 15.00,
-  },
+    storageUsed: {
+      type: Number,
+      default: 0,
+    },
+    totalStorage: {
+      type: Number,
+      default: 15.0,
+    },
 
     needsPasswordChange: {
       type: Boolean,
       default: false,
     },
     resetPasswordCode: {
-   type: String,
-   
- },
+      type: String,
+    },
 
-resetPasswordExpire: {
-  type: Date,
-},
+    resetPasswordExpire: {
+      type: Date,
+    },
+    isDelete: {
+      type: Boolean,
+      default : false,
+    },
 
     passwordChangedAt: Date,
   },
+
   { timestamps: true }
 );
 
@@ -91,7 +95,5 @@ authSchema.statics.isPasswordMatched = async function (
 ) {
   return await bcrypt.compare(plainPassword, hashedPassword);
 };
-
-
 
 export const authModel = model("auth", authSchema);

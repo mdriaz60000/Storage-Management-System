@@ -3,7 +3,7 @@ import { Schema, model } from "mongoose";
 
 const folderSchema = new Schema(
   {
-    auth: {
+    userId: {
          type: Schema.Types.ObjectId,
           ref: "auth",
         //    required: true

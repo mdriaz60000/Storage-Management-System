@@ -2,10 +2,10 @@ import { Schema, model } from "mongoose";
 
 const noteSchema = new Schema(
   {
-    auth: {
+    user: {
       type: Schema.Types.ObjectId,
       ref: "auth",
-      required: true,
+       required: true,
     },
 
     content: {

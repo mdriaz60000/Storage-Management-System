@@ -6,6 +6,8 @@ const createFolder = async (req, res, next) => {
   try {
 
     const payload = req.body;
+    // const userId = req.user.userId;
+    // console.log(userId)
     const result = await folderService.createFolder(payload);
 
     res.status(201).json({
@@ -36,7 +38,8 @@ const getAllFolder = async (req, res, next) => {
 const deleteFolder = async (req, res, next) => {
   try {
    const {id} = req.params
-    const result = await folderService.deleteFolder(id);
+   const userId = req.user.userId;
+    const result = await folderService.deleteFolder(id, userId);
     res.status(200).json({
       success: true,
       message: "folder delete successfully",

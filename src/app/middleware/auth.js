@@ -1,7 +1,5 @@
-
 import jwt from "jsonwebtoken";
-import config from "../config";
-
+import config from "../config/index.js";
 
 export const auth = (...requiredRoles) => {
   return (req, res, next) => {
@@ -18,14 +16,17 @@ export const auth = (...requiredRoles) => {
         });
       }
 
-      // verify token
       const decoded = jwt.verify(token, config.jwt_access_secret);
+   
+      req.user = {
+        userId: decoded.userId || decoded.sub,
+        role: decoded.role,
+      };
 
-      req.user = decoded;
-
+      
       if (
         requiredRoles.length &&
-        !requiredRoles.includes(decoded.role)
+        !requiredRoles.includes(req.user.role)
       ) {
         return res.status(403).json({
           success: false,

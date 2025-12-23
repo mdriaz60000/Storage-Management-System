@@ -6,11 +6,11 @@ const register = async (req, res, next) => {
   try {
     const result = await authService.register(req.body);
 
-    const { email, role, name } = result;
-    const accessToken = jwt.sign({ email, role }, config.jwt_access_secret, {
+    const { email, _id, role, name } = result;
+    const accessToken = jwt.sign({ email, userId :_id, role }, config.jwt_access_secret, {
       expiresIn: "2d",
     });
-    const reFreshToken = jwt.sign({ email, role }, config.jwt_refresh_secret, {
+    const reFreshToken = jwt.sign({ email, userId :_id, role }, config.jwt_refresh_secret, {
       expiresIn: "30d",
     });
 
@@ -50,7 +50,7 @@ const register = async (req, res, next) => {
 const login = async (req, res, next) => {
   try {
     const result = await authService.login(req.body);
-    const { reFreshToken, accessUser, accessToken } = result;
+    const { reFreshToken, accessToken } = result;
 
     res.cookie("reFreshToken", reFreshToken, {
       secure: config.node_env === "production",
@@ -67,7 +67,7 @@ const login = async (req, res, next) => {
       data: {
         accessToken,
         reFreshToken,
-        accessUser,
+        
       },
     });
   } catch (err) {
@@ -127,10 +127,27 @@ const resetPassword = async (req, res, next) => {
   }
 };
 
+const deleteAccount = async (req, res, next) => {
+  try {
+   
+   const userId = req.user.userId;
+   console.log(userId)
+    const result = await authService.deleteAccount( userId);
+    res.status(200).json({
+      success: true,
+      message: "Account delete successfully",
+      data : result
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
 export const authController = {
   register,
   login,
   forgetPassword,
   verifyResetCode,
   resetPassword,
+  deleteAccount
 };
